@@ -9,6 +9,7 @@ import animationdata from "@/app/assets/empty_cart.json";
 import Link from "next/link";
 import { LoaderCircle } from "lucide-react";
 import { useUser } from "../middlewares/UserContext";
+import toast from "react-hot-toast";
 
 interface CartItemType {
   id: number;
@@ -35,9 +36,9 @@ function Page() {
   const findTotalDiscount = () => {
     const totalDiscount = cartItems.reduce((acc, item) => {
       const itemDiscount = item.price * (1 - item.discount! / 100);
-      const itemDiscountFixed = parseFloat(itemDiscount.toFixed(2));
+      const itemDiscountFixed = item.price;
 
-      return acc + itemDiscountFixed;
+      return acc + (itemDiscountFixed - itemDiscount) * item.quantity;
     }, 0);
 
     setTotalDiscount(totalDiscount);
@@ -71,23 +72,35 @@ function Page() {
       ) : (
         <div className="p-4">
           <div className="grid md:grid-cols-4 grid-cols-1 max-w-7xl  justify-between gap-10 mx-auto">
-            <div className="flex flex-col col-span-3 gap-5 items-center">
+            <div className="flex flex-col  col-span-3 gap-5 items-center">
               {currentCartItems?.length > 0 ? (
-                <div className="flex flex-col w-full items-center">
-                  {currentCartItems.map((item) => (
-                    <CartItem
-                      key={item.id}
-                      quantity={item.quantity!}
-                      AddCartItem={setCartItems}
-                      id={item.id}
-                      itemName={item.itemName}
-                      price={item.price}
-                      desc={item.desc}
-                      imgLink={item.imgLink}
-                      data={item}
-                    />
-                  ))}
-                </div>
+                <>
+                  <div className="flexflex-col w-full items-center">
+                    {currentCartItems.map((item) => (
+                      <CartItem
+                        key={item.id}
+                        quantity={item.quantity!}
+                        AddCartItem={setCartItems}
+                        id={item.id}
+                        itemName={item.itemName}
+                        price={item.price}
+                        desc={item.desc}
+                        imgLink={item.imgLink}
+                        data={item}
+                      />
+                    ))}
+                  </div>
+                  <div className="bg-white w-full  p-5 flex items-end justify-end">
+                    <div
+                      onClick={() =>
+                        toast.success("Looks like you found your intern")
+                      }
+                      className="bg-orange-400 w-[140px] cursor-pointer  text-white flex items-center  justify-center p-2"
+                    >
+                      Place Order
+                    </div>
+                  </div>
+                </>
               ) : user ? (
                 <div className="w-full flex flex-col items-center">
                   <Lottie

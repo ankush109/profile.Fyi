@@ -74,7 +74,10 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
   // 3) if not add with quantity one
   const addToCart = (product: ProductCardArrayProps) => {
     const itemCapacity = findInventoryCapacity(product.id);
-
+    if (!user) {
+      toast.error("Login to add to add");
+      return;
+    }
     const finditem = cartItems.find((u) => u.id === product.id);
     console.log(finditem?.quantity == itemCapacity, "curr");
     let updatedCartItems = [];
