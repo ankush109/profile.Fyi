@@ -1,7 +1,8 @@
 import React from "react";
-import Navbar from "../components/Navbar";
+
 import { RegisterForm } from "./RegisterForm";
 import Image from "next/image";
+import Navbar from "@/app/components/Navbar";
 
 function Page() {
   return (

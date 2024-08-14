@@ -16,8 +16,9 @@ export const metadata: Metadata = {
 };
 // I have used Tanstack react Query which is a well known tool for asynchronous state management
 // and for local state management I have used Context API which is suited for small scale web apps
-// other options -> redux (used for large applications)
-
+// other options -> React Redux (used for large applications)
+// I have made two context - > User Context for user info / Shopping Cart Context for shoping cart info accross the web application
+// so we need to wrap the entire App with the context provider
 const queryClient = new QueryClient();
 export default function RootLayout({
   children,

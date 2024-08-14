@@ -2,7 +2,7 @@
 import createError from "http-errors";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "../../prisma/index";
-
+// the middleware to check if the req has the headers if then verifes the jwt provided 
 const authMiddleware = async (req, _res, next) => {
   const authHeader = req.headers.authorization;
    if (!authHeader) {

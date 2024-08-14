@@ -58,7 +58,7 @@ function Page() {
     findTotalPrice();
     findTotalDiscount();
     setLoading(false);
-    console.log(cartItems, "from mycarts page");
+    console.log(cartItems, "from mycarts page"); // so when the cart page renders it pulls the data from the context and sets it here
   }, [cartItems]);
 
   return (

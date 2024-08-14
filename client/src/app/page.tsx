@@ -11,17 +11,17 @@ import Pagination from "./components/Pagination";
 import MobileSidebar from "./components/MobileController";
 
 export default function Home() {
-  const { productsList } = useShoppingCart();
+  // all the states : -
+  const { productsList } = useShoppingCart(); // get the products from the context
   const [pageCount, setPageCount] = useState(0);
   const [currentPageNo, setCurrentPageNo] = useState(0);
-  const [priceRange, setPriceRange] = useState(6000);
+  const [priceRange, setPriceRange] = useState(6000); // initial price range is set to 6000
   const [products, setProducts] = useState<ProductCardArrayProps[]>([]);
-  const [type, setType] = useState("all");
+  const [type, setType] = useState("all"); // filter for category wise
   const [userSearch, setUserSearch] = useState("");
   const [priceStatus, setPriceStatus] = useState("");
 
-  const { data: userData } = GetUserQuery();
-
+  const { data: userData } = GetUserQuery(); // we could also have pulled the user info from the context but also can do this
   const filterProducts = () => {
     // filter price
     let filteredProducts = productsList.filter(
@@ -41,6 +41,7 @@ export default function Home() {
 
     return filteredProducts;
   };
+
   // returns the product list with paginated slices
   const paginateProducts = (filteredProducts: ProductCardArrayProps[]) => {
     const numberOfPages = Math.ceil(filteredProducts.length / 6);
@@ -56,6 +57,8 @@ export default function Home() {
     const paginatedProducts = paginateProducts(filteredProducts);
     setProducts(paginatedProducts);
   };
+  // the below useEffect is run when the any thing changes in the dependency arr
+  // for eg -> if the user tries to search it will search based on the current saved filters
   useEffect(() => {
     const data = setTimeout(() => {
       if (userSearch.trim() != "") {
@@ -69,7 +72,9 @@ export default function Home() {
     }, 3000);
     return () => clearTimeout(data);
   }, [currentPageNo, type, productsList, priceRange, userSearch]);
+
   // when the component renders all the applied filters will be applied to the products
+
   useEffect(() => {
     if (productsList && productsList.length > 0) {
       updateProductList(); // <- takes care for all the filters like price , category
@@ -77,6 +82,7 @@ export default function Home() {
   }, [currentPageNo, type, productsList, priceRange, userData]);
 
   // filter functions for diff cases
+
   const priceFilter = (value: number) => {
     setPriceRange(value);
   };

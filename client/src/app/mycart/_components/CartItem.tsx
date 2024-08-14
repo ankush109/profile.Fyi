@@ -27,7 +27,7 @@ const CartItem: FC<ProductCardProps> = ({
   AddCartItem,
 }) => {
   const { addToCart, removeFromCart, removeAllSelectedItem } =
-    useShoppingCart();
+    useShoppingCart(); // functions being pulled from the shopping cart context for adding removing items
   const increment = () => {
     addToCart(data);
   };
