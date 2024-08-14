@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import CartItem from "./_components/CartItem";
 import { useShoppingCart } from "../middlewares/ContextProvider";
@@ -33,7 +33,8 @@ function Page() {
   const [totalDiscount, setTotalDiscount] = useState(0);
 
   // helper function to calc the ammounts of user cart items
-  const findTotalDiscount = () => {
+  const findTotalDiscount = useCallback(() => {
+    // useCallback caches the fn() btw re-renders
     const totalDiscount = cartItems.reduce((acc, item) => {
       const itemDiscount = item.price * (1 - item.discount! / 100);
       const itemDiscountFixed = item.price;
@@ -42,16 +43,15 @@ function Page() {
     }, 0);
 
     setTotalDiscount(totalDiscount);
-  };
+  }, [cartItems]);
 
-  const findTotalPrice = () => {
+  const findTotalPrice = useCallback(() => {
     const total = cartItems.reduce(
       (acc, item) => acc + item.price * item.quantity!,
       0
     );
     setTotalPrice(total);
-  };
-
+  }, [cartItems]);
   useEffect(() => {
     const filteredItems = cartItems?.filter((u) => u.quantity! > 0);
     setCurrentCartItems(filteredItems);

@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useShoppingCart } from "./middlewares/ContextProvider";
 import toast from "react-hot-toast";
 import ProductListPage from "./components/ProductListPage";
@@ -22,7 +22,7 @@ export default function Home() {
   const [priceStatus, setPriceStatus] = useState("");
 
   const { data: userData } = GetUserQuery(); // we could also have pulled the user info from the context but also can do this
-  const filterProducts = () => {
+  const filterProducts = useCallback(() => {
     // filter price
     let filteredProducts = productsList.filter(
       (u: ProductCardArrayProps) => u.price < priceRange
@@ -40,8 +40,7 @@ export default function Home() {
     }
 
     return filteredProducts;
-  };
-
+  }, [productsList, priceRange, type]); // compute when dependency changes
   // returns the product list with paginated slices
   const paginateProducts = (filteredProducts: ProductCardArrayProps[]) => {
     const numberOfPages = Math.ceil(filteredProducts.length / 6);
