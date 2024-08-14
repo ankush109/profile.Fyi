@@ -72,10 +72,11 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
   // 1) do we have the quanity which the user has select it so I check the cart item quanity with my JSON'S capcaity which is the total capacity
   // 2) if the item is already in the cartItems array just increase its qunantity
   // 3) if not add with quantity one
+
   const addToCart = (product: ProductCardArrayProps) => {
     const itemCapacity = findInventoryCapacity(product.id);
     if (!user) {
-      toast.error("Login to add to add");
+      toast.error("Login to add to add"); // check to see if the user is logged in or not !
       return;
     }
     const finditem = cartItems.find((u) => u.id === product.id);
@@ -83,20 +84,22 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
     let updatedCartItems = [];
     if (finditem) {
       if (finditem?.quantity >= itemCapacity!) {
+        // checking if there are enough items in the inventory
         console.log("no more");
-        toast.error("No more item left in Inventory");
+        toast.error("No more item left in Inventory"); // if not return
         return;
       }
-      updatedCartItems = cartItems.map((u) =>
-        u.id === product.id ? { ...u, quantity: u.quantity + 1 } : u
+      updatedCartItems = cartItems.map(
+        (u) => (u.id === product.id ? { ...u, quantity: u.quantity + 1 } : u) // if the product is already in the cart [] just increase the quantity + 1
       );
       setCartItems(updatedCartItems);
 
       toast.success("Item added to your Cart");
     } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+      setCartItems([...cartItems, { ...product, quantity: 1 }]); // if the product doesn't exist in the cart [] then  add the other items and add the selected product with quantity as 1
     }
   };
+
   // now this is what fetches the previous cart items when a user logs in from its local storage
 
   useEffect(() => {
@@ -104,24 +107,28 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
       // sync the cart items data and map to its id in the localstorage
       const availableData = localStorage.getItem(user.id!);
       if (availableData) {
-        const parsedData = JSON.parse(availableData);
+        const parsedData = JSON.parse(availableData); // checks the previously saved cartItems in the localstorage
         console.log(parsedData, "pars");
         setCartItems(parsedData);
       } else {
         console.log("No cart data found for user");
-        setCartItems([]);
+        setCartItems([]); // when user loggs in the with the first time
       }
     }
   }, [user]);
+
   // -> calls the syncLocalStorage fn() to update the local state to store the updated cart items
   useEffect(() => {
     console.log(user?.id, "cart");
     syncLocalStorage(user?.id!, cartItems);
   }, [cartItems]);
+
+  // remove a particular item completely from the cart
   const removeAllSelectedItem = (product: CartItem) => {
     const up = cartItems.filter((u) => u.id !== product.id);
     setCartItems(up);
   };
+
   // fn() to remove the selected item from user cart
   const removeFromCart = (product: CartItem) => {
     setCartItems((prevItems) =>
