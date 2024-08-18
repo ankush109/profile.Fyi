@@ -1,14 +1,24 @@
 
-FROM node:18-alpine
+FROM node:20
 
+
+# Set the working directory
 WORKDIR /app
 
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-RUN npm install --silent
+# Install dependencies
+RUN npm install
 
+# Copy the rest of the application
 COPY . .
 
+# Build the React application
+RUN npm run build
+
+# Expose the port
 EXPOSE 3000
 
-CMD ["npm","run","dev"] 
+# Start the application
+CMD ["npm", "start"]
